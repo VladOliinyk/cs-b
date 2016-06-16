@@ -1,5 +1,3 @@
-// https://www.youtube.com/watch?v=KNVPFVG49Oc
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -12,18 +10,14 @@
 #include <iomanip>
 
 #define DEBUG 0
+#define SHOW_INPUT_FILE 1
+#define SHOW_TREE 1
 #define SHOW_TABLE 1
 #define SHOW_CHAR_CODES_STRING 1
 
 using namespace std;
 
-string getUserString() {
-    string str;
-    cout << "Enter your string: ";
-    getline(cin, str);
-    return str;
-}
-
+/* Class for tree of symbols and their binary codes. */
 class Node
 {
 public:
@@ -43,6 +37,10 @@ public:
     }
 };
 
+/*
+ * Overloading operator ()
+ * Sort the elements according to pointers, not pointers.
+ */
 struct sortByCount
 {
     bool operator()(Node* left, Node* right) const {
@@ -50,8 +48,9 @@ struct sortByCount
     }
 };
 
+/* Recursive function that printing each element of tree. */
 void printTreeR(Node* root, int lvl=0) {
-    if (DEBUG) {
+    if (DEBUG || SHOW_TREE) {
         if (root != NULL) {
             printTreeR(root->left, lvl+2);
             for (int i=0; i < lvl; i++) {
@@ -67,19 +66,24 @@ void printTreeR(Node* root, int lvl=0) {
         }
     }
 }
-
+/* Main function that printing each element of tree.
+ * Calling recursive print tree function. */
 void printTree(Node* root) {
-    if (DEBUG) {
+    if (DEBUG || SHOW_TREE) {
         cout << endl << "Tree:" << endl;
-    }
-    printTreeR(root);
-    if (DEBUG) {
+        printTreeR(root);
         cout << endl << endl;
     }
 }
 
+/* Global vector with char code for char. */
 vector<char> charCode;
+
+/* Global map of all chars from input file and their codes. */
 map<char, vector<char> > table;
+
+/* Method that creating table of all chars and their char codes.
+ * Using @charCode vector to generate char code for each char from tree. */
 void createTable(Node* root) {
 
     if (root->left != NULL) {
@@ -100,9 +104,9 @@ void createTable(Node* root) {
     }
 
     charCode.pop_back();
-
 }
 
+/* Function that turns vectior into a string. */
 string showVector(vector<char> vec) {
 
     string str = "";
@@ -113,33 +117,45 @@ string showVector(vector<char> vec) {
     return str;
 }
 
+/* Function that prints input file content. */
+void showInputFileData() {
+    if (DEBUG || SHOW_INPUT_FILE) {
+        ifstream tempInputFile("input.txt");
+        cout << "=== Start of input file: ===" << endl;
+        while(!tempInputFile.eof()) {
+            char buff[1];
+            tempInputFile >> buff;
+            cout << buff;
+        }
+        cout << endl << "===  End of input file.  ===" << endl;
+        tempInputFile.close();
+    }
+}
 
+
+/* Main program function.
+ * Encodes and decodes text from the input.txt file. */
 int main(int argc, char *argv[])
 {
-    map<char, int> myMap;
+    ///// ///// ///// encoding part ///// ///// /////
+    showInputFileData();
 
-    // with string
-    /*
-    string str = getUserString();
-    cout << "Initial string: " << str << endl;
-
-    for (int i = 0; i < str.size(); i++) {
-        myMap[str.at(i)]++;
-    }*/
-    // with string end
-
-    // with file
+    // Open input file and write the characters from a file into the map.
     ifstream inputFile("input.txt", ios::in | ios::binary);
+
+    // Create map of all characters from input file.
+    map<char, int> myMap;
     while(!inputFile.eof()) {
         myMap[inputFile.get()]++;
     }
+    // Reset file pointer to start of file.
     inputFile.clear();
     inputFile.seekg(0);
-    // with file end
 
+    // list of pointer to all chars from input file
     list<Node*> myList;
-
     map<char, int>::iterator itr_mymap;
+    // for all maps setting nodes for each element
     for (itr_mymap = myMap.begin(); itr_mymap != myMap.end(); itr_mymap++) {
         Node *ptr = new Node;
         ptr->ch = itr_mymap->first;
@@ -149,14 +165,7 @@ int main(int argc, char *argv[])
         myList.push_back(ptr);
     }
 
-    /// show root element in myList
-    list<Node*>::iterator itr_mylist;
-    if (DEBUG) {
-        for (itr_mylist = myList.begin(); itr_mylist != myList.end(); itr_mylist++) {
-            cout << (*itr_mylist)->ch << ":" << (*itr_mylist)->count << endl;
-        }
-    }
-
+    // creating a tree of chars
     while (myList.size() != 1) {
         myList.sort(sortByCount());
 
@@ -173,89 +182,34 @@ int main(int argc, char *argv[])
 
     createTable(root);
     printTree(root);
-    /// show table
-    map<char, vector<char> >::iterator itr_table;
+
     if (DEBUG || SHOW_TABLE) {
+        map<char, vector<char> >::iterator itr_table;
         cout << "Char table: " << endl;
         for (itr_table = table.begin(); itr_table != table.end(); itr_table++) {
             cout << "[" << setw(2) << itr_table->first << setw(2) << "]" << " : " << showVector(itr_table->second) << endl;
         }
     }
 
-    string final = "";
-    //with string
-    /*for (int i = 0; i < str.size(); i++) {
-        vector<char> tmp = table[str.at(i)];
-        for (int j = 0; j < tmp.size(); j++) {
-            final+=tmp[j];
-        }
-    }*/
-    // with string end
-
-    //with file
-    while(!inputFile.eof()) {
-        char tempChar = inputFile.get();
-        vector<char> tmp = table[tempChar];
-        for (int j = 0; j < tmp.size(); j++) {
-            final+=tmp[j];
-        }
-    }
-    inputFile.clear();
-    inputFile.seekg(0);
-    //with file end
-
     if (DEBUG || SHOW_CHAR_CODES_STRING) {
+        string final = "";
+        while(!inputFile.eof()) {
+            char tempChar = inputFile.get();
+            vector<char> tmp = table[tempChar];
+            for (int j = 0; j < tmp.size(); j++) {
+                final+=tmp[j];
+            }
+        }
+        inputFile.clear();
+        inputFile.seekg(0);
         cout << "Char codes string: " << final << endl;
     }
 
     ofstream myOutputFile("output.txt");
     int counter = 0;
     char buff = 0;
-    // with string
-    /*for (int i = 0; i < str.size(); i++) {
-        vector<char> charCode = table[str.at(i)];
-        for (int j = 0; j < charCode.size(); j++) {
 
-            char null = 0;
-            int shift = 7 - counter;
-            int curCharCode = charCode[j] & 1;
-
-            if (DEBUG) {
-                cout << "    counter = " << counter << endl;
-                cout << "current char: '" << str.at(i) << "' : " << charCode[j] << endl;
-                cout << "curChar code: " << bitset<8>(curCharCode) << endl;
-                cout << "      shift = " << shift << endl;
-                cout << "        null: " << bitset<8>(null) << endl;
-            }
-
-            null = (curCharCode << shift);
-            if (DEBUG) {
-                cout << " after shift: " << bitset<8>(null) << endl;
-                cout << "currend buff: " << bitset<8>(buff) << endl;
-                cout << "              --------" << endl;
-            }
-
-            buff = buff | null;
-            if (DEBUG) {
-                cout << "    new buff: " << bitset<8>(buff) << endl << endl;
-            }
-
-            counter++;
-            if (counter == 8) {
-                counter = 0;
-                if (DEBUG) {
-                    cout << "buff to file: ";
-                    cout << bitset<8>(buff) << endl;
-                }
-                myOutputFile << buff;
-                buff = 0;
-            }
-        }
-    }*/
-    // with string end
-
-    // with file
-
+    // Coding all chars from input file to binary view by 8 btis
     while (!inputFile.eof()) {
         char tempChar = inputFile.get();
         vector<char> charCode = table[tempChar];
@@ -297,9 +251,8 @@ int main(int argc, char *argv[])
             }
         }
     }
-    // with file end
 
-
+    // if count of encoded bits is not a multiple of 8 adding '0' in the end
     if ( (counter != 8) || (counter != 0) ) {
         for (int i=counter; i <= (7 - counter); i++) {
             buff = buff | 0 << (7 - counter);
@@ -313,10 +266,8 @@ int main(int argc, char *argv[])
         cout << "-- FILE CLOSED --" << endl << endl;
     }
 
-
-
+    ///// ///// ///// decoding part ///// ///// /////
     ifstream myInputFile("output.txt", ios::in | ios::binary);
-
     setlocale(LC_ALL,"Russian");
 
     Node *p = root;
