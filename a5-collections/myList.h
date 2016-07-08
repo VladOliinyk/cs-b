@@ -1,10 +1,16 @@
+// todo:
+//  разобраться с итератором
+//  разобраться с копированием (перегрузка оператора =)
+//  нужно ли делать swap ?
+//  мб printList ?
+
 #ifndef MYLIST_H_INCLUDED
 #define MYLIST_H_INCLUDED
 
 template <class T>
 class MyList {
 
-///// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! /////
+    ///// !!!!!!!!!!!!!!!!!private!!!!!!!!!!!!!!!!!! /////
 public:
     struct Node {
         T data;
@@ -20,7 +26,7 @@ public:
     ~MyList();
     MyList(const MyList<T> &anotherList);
 
-    void isEmpty();
+    bool isEmpty();
     void clear();
     unsigned int getSize();
     void push_back(const T &data);
@@ -30,7 +36,42 @@ public:
     //void insert();
     T &front();
     T &back();
+
+    class iterator {
+    public:
+        Node* nodePtr;
+        iterator() { nodePtr = NULL; }
+
+        iterator(Node* ptr) { nodePtr = ptr; }
+
+        T &operator*() { return nodePtr->data; }
+
+        iterator &operator++() { return (nodePtr = nodePtr->next); }
+
+        iterator &operator--() { return (nodePtr = nodePtr->prev); }
+
+        bool operator==(const iterator &enotherIter) { return nodePtr == enotherIter.nodePtr; }
+
+        bool operator!=(const iterator &enotherIter) { return nodePtr != enotherIter.nodePtr; }
+
+        iterator begin() {
+            iterator bgn(head);
+            return bgn;
+        }
+
+        iterator end() {
+            iterator en(tail->next);
+            return en;
+        }
+
+        bool hasNext() {
+            return this->next;
+        }
+    };
+
+    MyList<T> &operator=(const T &anotherList);
 };
+
 template <typename T>
 MyList<T>::MyList() {
     head = tail = NULL;
@@ -69,7 +110,7 @@ void MyList<T>::clear() {
 }
 
 template <typename T>
-void MyList<T>::isEmpty(){
+bool MyList<T>::isEmpty(){
     return (size == 0); // mb (!size) ?
 }
 
@@ -115,17 +156,44 @@ void MyList<T>::push_front(const T &data) {
 
 template <typename T>
 void MyList<T>::pop_back() {
+    if(!isEmpty()) {
+        if (tail->prev != NULL) {
+            tail = tail->prev;
+            tail->next = NULL;
+        } else {
+            head = NULL;
+            tail = NULL;
+        }
+        size--;
+    } else {
+        std::cerr << std::endl << "Error: can't pop_back. The list is empty." << std::endl;
+        exit(1);
+    }
 }
 
 template <typename T>
 void MyList<T>::pop_front(){
+    if(!isEmpty()) {
+        if (head->next != NULL) {
+            head = head->next;
+            head->prev = NULL;
+        } else {
+            head = NULL;
+            tail = NULL;
+        }
+        size--;
+    } else {
+        std::cerr << std::endl << "Error: can't pop_back. The list is empty." << std::endl;
+        exit(1);
+    }
+
 }
 
 template <typename T>
 T &MyList<T>::front() {
     if(isEmpty()) {
-        std::cerr << "Error: front element does not exist. The list is empty." << std::endl;
-//        exit();
+        std::cerr << std::endl << "Error: front element does not exist. The list is empty." << std::endl;
+        exit(1);
     }
     return head->data;
 }
@@ -133,10 +201,18 @@ T &MyList<T>::front() {
 template <typename T>
 T &MyList<T>::back() {
     if(isEmpty()) {
-        std::cerr << "Error: back element does not exist. The list is empty." << std::endl;
-//        exit(1);
+        std::cerr << std::endl << "Error: back element does not exist. The list is empty." << std::endl;
+        exit(1);
     }
     return tail->data;
+}
+
+// я хз почему перегрузка не работает
+// код тела перегрузки просто НЕ выполняется и все
+template<typename T>
+MyList<T> &MyList<T>::operator=(const T &anotherList) {
+    std::cout << "hey" << std::endl;
+    return *this;
 }
 
 
