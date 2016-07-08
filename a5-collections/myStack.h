@@ -1,3 +1,7 @@
+// todo:
+//  разобраться с копированием (перегрузка оператора =)
+//  мб printStack ?
+
 #ifndef MYSTACK_H_INCLUDED
 #define MYSTACK_H_INCLUDED
 
