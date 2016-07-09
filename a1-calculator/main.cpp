@@ -1,4 +1,6 @@
-#include "unittests.h"
+// main.cpp
+// Main frogram file.
+
 #include "prepear.h"
 #include "calculation.h"
 
@@ -10,11 +12,6 @@
 */
 int main(int argc, char** argv)
 {
-    if (TEST) {
-        doTests(argc, argv);
-        return 0;
-    }
-
     if (USAGE)
         showUsage();
 

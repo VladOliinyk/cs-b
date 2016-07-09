@@ -1,3 +1,6 @@
+// calculation.h
+// Header file for calculation functions.
+
 #ifndef CALCULATION
 #define CALCULATION
 

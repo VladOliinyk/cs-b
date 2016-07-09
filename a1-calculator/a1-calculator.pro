@@ -9,11 +9,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     calculation.cpp \
-    unittests.cpp
 
 HEADERS += \
     calculation.h \
     prepear.h \
     configuration.h \
-    unittests.h
 

@@ -1,3 +1,5 @@
+// calculation.cpp
+// Implementation file for calculation functions.
 #include "calculation.h"
 
 using namespace std;

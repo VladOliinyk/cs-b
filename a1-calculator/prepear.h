@@ -1,3 +1,6 @@
+// prepear.h
+// Header file for the functions of the equation string preparation.
+
 #ifndef PREPEAR
 #define PREPEAR
 
