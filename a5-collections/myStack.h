@@ -1,6 +1,5 @@
 // todo:
-//  разобраться с копированием (перегрузка оператора =)
-//  мб printStack ?
+//  разобраться с копированием (перегрузка оператора = ) ...все равно не работает
 
 #ifndef MYSTACK_H_INCLUDED
 #define MYSTACK_H_INCLUDED
@@ -33,6 +32,7 @@ public:
     MyStack<T>& operator=(const MyStack<T> &anotherStack);
 };
 
+/* Default constructor */
 template <typename T>
 MyStack<T>::MyStack(int startSize) {
     size = (startSize > 1) ? startSize : defaultSize;
@@ -40,6 +40,7 @@ MyStack<T>::MyStack(int startSize) {
     array = new T[size];
 }
 
+/* Default destructor */
 template <typename T>
 MyStack<T>::~MyStack() {
     delete[] array;
@@ -47,6 +48,7 @@ MyStack<T>::~MyStack() {
     size = 0;
 }
 
+/* Copy constructor */
 template <typename T>
 MyStack<T>::MyStack(const MyStack<T> &anotherStack) {
     size = anotherStack.size;
@@ -57,16 +59,25 @@ MyStack<T>::MyStack(const MyStack<T> &anotherStack) {
     }
 }
 
+/*
+ * A function that return the stack size (capacity).
+ * @return size - the size of the list;
+ */
 template <typename T>
 int MyStack<T>::getSize() {
     return size;
 }
 
+/*
+ * A function that return the count of elements in stack.
+ * @return filled - count of elements in stack;
+ */
 template <typename T>
 int MyStack<T>::getFilled() {
     return filled;
 }
 
+/* A function that increases the size of the stack. */
 template <typename T>
 void MyStack<T>::resize(double resizeCoef) {
     int newSize = (int) size * resizeCoef;
@@ -79,11 +90,19 @@ void MyStack<T>::resize(double resizeCoef) {
     size = newSize;
 }
 
+/*
+ * A function that checks the stack is empty.
+ * @return bool value;
+ */
 template <typename T>
 bool MyStack<T>::isEmpty() {
     return !filled;
 }
 
+/*
+ * A function that adds element to the stack.
+ * @param &newElem - link to the data value.
+ */
 template <typename T>
 void MyStack<T>::push(const T &newElem) {
     if (filled >= (int)(fillingLimitedCoef*size)) {
@@ -93,6 +112,7 @@ void MyStack<T>::push(const T &newElem) {
     filled++;
 }
 
+/* A function that remove ещз element from the stack. */
 template <typename T>
 void MyStack<T>::pop(){
     if (!isEmpty()) {
@@ -103,14 +123,20 @@ void MyStack<T>::pop(){
     }
 }
 
+/*
+ * A function that return top element from the stack.
+ * @return T% value - link to the top stack element.
+ */
 template <typename T>
 T& MyStack<T>::top() {
     return (filled) ? array[filled-1] : *array;
 }
 
+
 template <typename T>
 MyStack<T> &MyStack<T>::operator=(const MyStack<T> &anotherStack) {
-    if (array != &anotherStack.array) {
+    std::cout << "hey operator= for MyStack" << std::endl;
+    if (&array != &anotherStack.array) {
         delete[] array;
         size = anotherStack.size;
         array = new T[size];
