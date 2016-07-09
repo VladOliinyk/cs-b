@@ -1,3 +1,6 @@
+// main.cpp
+// Main file.
+
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 #include <QFile>

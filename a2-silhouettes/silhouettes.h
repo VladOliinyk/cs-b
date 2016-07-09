@@ -1,3 +1,6 @@
+// silhouettes.h
+// Header file.
+
 /// begin of DEBUG VARIABLES part ///
 /* The switcher for writing main-debug messages to console.
  *  [d:] in console log.
