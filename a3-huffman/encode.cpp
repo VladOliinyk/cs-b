@@ -1,12 +1,13 @@
-#include "header.h"
 #include "encode.h"
+#include "config.h"
+#include "node.h"
 
 #include <fstream>
 #include <list>
 #include <iomanip>
 #include <bitset>
 
-#include "node.h"
+using namespace std;
 
 /* Global vector with char code for char. */
 vector<char> charCode;
@@ -71,7 +72,7 @@ string showVector(vector<char> vec) {
 
     string str = "";
 
-    for (int i=0; i < vec.size(); i++) {
+    for (int i = 0; i < (int) vec.size(); i++) {
         str+=vec.at(i);
     }
     return str;
@@ -80,7 +81,7 @@ string showVector(vector<char> vec) {
 /* Function that prints input file content. */
 void showInputFileData() {
     if (DEBUG || SHOW_INPUT_FILE) {
-        ifstream tempInputFile("input.txt");
+        ifstream tempInputFile(INPUT_FILE);
         cout << "=== Start of input file: ===" << endl;
         while(!tempInputFile.eof()) {
             char buff[1];
@@ -97,7 +98,7 @@ Node* encode() {
     showInputFileData();
 
     // Open input file and write the characters from a file into the map.
-    ifstream inputFile("input.txt", ios::in | ios::binary);
+    ifstream inputFile(INPUT_FILE, ios::in | ios::binary);
 
     // Create map of all characters from input file.
     map<char, int> myMap;
@@ -152,7 +153,7 @@ Node* encode() {
         while(!inputFile.eof()) {
             char tempChar = inputFile.get();
             vector<char> tmp = table[tempChar];
-            for (int j = 0; j < tmp.size(); j++) {
+            for (int j = 0; j < (int) tmp.size(); j++) {
                 final+=tmp[j];
             }
         }
@@ -169,7 +170,7 @@ Node* encode() {
     while (!inputFile.eof()) {
         char tempChar = inputFile.get();
         vector<char> charCode = table[tempChar];
-        for (int j = 0; j < charCode.size(); j++) {
+        for (int j = 0; j < (int) charCode.size(); j++) {
 
             char null = 0;
             int shift = 7 - counter;

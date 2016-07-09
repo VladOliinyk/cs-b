@@ -2,7 +2,6 @@
 #define ENCODE
 
 #include "node.h"
-#include "header.h"
 #include <vector>
 #include <map>
 

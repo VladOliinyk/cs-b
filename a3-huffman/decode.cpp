@@ -1,24 +1,30 @@
-#include "header.h"
+#include "config.h"
 #include "decode.h"
 
 #include <fstream>
 
+using namespace std;
+
 void decode(Node* root) {
     ///// ///// ///// decoding part ///// ///// /////
-    ifstream myInputFile("output.txt", ios::in | ios::binary);
+    ifstream myInputFile(OUTPUT_FILE, ios::in | ios::binary);
     setlocale(LC_ALL,"Russian");
 
     Node *p = root;
     int i_counter=0;
     char byte;
     byte = myInputFile.get();
-    cout << "Decoded string: ";
+    if (SHOW_DECODED_STRING) {
+        cout << "Decoded string: ";
+    }
     while(!myInputFile.eof()) {
         bool b = byte & (1 << (7-i_counter) ) ;
         (b) ? p=p->right : p=p->left;
 
         if (p->left==NULL && p->right==NULL) {
-            cout << p->ch;
+            if (SHOW_DECODED_STRING) {
+                cout << p->ch;
+            }
             p=root;
         }
         i_counter++;
@@ -28,5 +34,7 @@ void decode(Node* root) {
         }
     }
     myInputFile.close();
-    cout << endl;
+    if (SHOW_DECODED_STRING) {
+        cout << endl;
+    }
 }

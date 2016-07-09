@@ -12,8 +12,9 @@ SOURCES += main.cpp \
     decode.cpp
 
 HEADERS += \
-    header.h \
     encode.h \
     decode.h \
-    node.h
+    node.h \
+    config.h \
+    header.h
 

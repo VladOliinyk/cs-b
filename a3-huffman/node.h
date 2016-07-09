@@ -1,13 +1,14 @@
 #ifndef NODE_H
 #define NODE_H
+
 #include <iostream>
-using namespace std;
+//using namespace std;
 
 /* Class for tree of symbols and their binary codes. */
 class Node
 {
 public:
-    char ch = NULL;
+    char ch;
     int count;
     Node *left, *right;
 
