@@ -7,7 +7,13 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    encode.cpp \
+    decode.cpp
 
-HEADERS +=
+HEADERS += \
+    header.h \
+    encode.h \
+    decode.h \
+    node.h
 
