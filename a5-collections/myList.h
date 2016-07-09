@@ -1,8 +1,6 @@
 // todo:
-//  разобраться с итератором
-//  разобраться с копированием (перегрузка оператора =)
-//  нужно ли делать swap ?
-//  мб printList ?
+//  разобраться с копированием (перегрузка оператора = ) ...все равно не работает
+//  insert() сделать
 
 #ifndef MYLIST_H_INCLUDED
 #define MYLIST_H_INCLUDED
@@ -14,12 +12,12 @@ class MyList {
 public:
     struct Node {
         T data;
-        Node *next;
-        Node *prev;
+        Node* next;
+        Node* prev;
     };
     unsigned int size;
-    Node *head;
-    Node *tail;
+    Node* head;
+    Node* tail;
 
 public:
     MyList();
@@ -44,11 +42,27 @@ public:
 
         iterator(Node* ptr) { nodePtr = ptr; }
 
-        T &operator*() { return nodePtr->data; }
+        T operator*() { return nodePtr->data; }
 
-        iterator &operator++() { return (nodePtr = nodePtr->next); }
+        iterator operator++() {
+            nodePtr = nodePtr->next;
+            return nodePtr;
+        }
 
-        iterator &operator--() { return (nodePtr = nodePtr->prev); }
+        iterator operator++(int) {
+            nodePtr = nodePtr->next;
+            return nodePtr;
+        }
+
+        iterator operator--() {
+            nodePtr = nodePtr->prev;
+            return nodePtr;
+        }
+
+        iterator operator--(int) {
+            nodePtr = nodePtr->next;
+            return nodePtr;
+        }
 
         bool operator==(const iterator &enotherIter) { return nodePtr == enotherIter.nodePtr; }
 
@@ -69,20 +83,29 @@ public:
         }
     };
 
-    MyList<T> &operator=(const T &anotherList);
+    MyList<T>& operator=(const T &other) {
+        // все равно это не работает.
+        std::cout << "hey" << std::endl;
+        return *this;
+    }
+
+    void printList();
 };
 
+/* Default constructor */
 template <typename T>
 MyList<T>::MyList() {
     head = tail = NULL;
     size = 0;
 }
 
+/* Default destructor */
 template <typename T>
 MyList<T>::~MyList() {
     clear();
 }
 
+/* Copy constructor */
 template <typename T>
 MyList<T>::MyList(const MyList<T> &anotherList) {
     head = tail = NULL;
@@ -94,6 +117,7 @@ MyList<T>::MyList(const MyList<T> &anotherList) {
     }
 }
 
+/* A function that clears the list. */
 template <typename T>
 void MyList<T>::clear() {
     while (size != 0) {
@@ -109,16 +133,28 @@ void MyList<T>::clear() {
     }
 }
 
+/*
+ * A function that checks the list is empty.
+ * @return bool value;
+ */
 template <typename T>
 bool MyList<T>::isEmpty(){
     return (size == 0); // mb (!size) ?
 }
 
+/*
+ * A function that return the list size.
+ * @return size - the size of the list;
+ */
 template <typename T>
 unsigned int MyList<T>::getSize() {
     return size;
 }
 
+/*
+ * A function that adds node in the end of the list.
+ * @param &data - link to the data value.
+ */
 template <typename T>
 void MyList<T>::push_back(const T &data) {
     Node* n = new Node;
@@ -137,6 +173,10 @@ void MyList<T>::push_back(const T &data) {
     size++;
 }
 
+/*
+ * A function that adds node in the front of the list.
+ * @param &data - link to the data value.
+ */
 template <typename T>
 void MyList<T>::push_front(const T &data) {
     Node* n = new Node;
@@ -154,41 +194,58 @@ void MyList<T>::push_front(const T &data) {
     size++;
 }
 
+/* A function that remove last element from the list. */
 template <typename T>
 void MyList<T>::pop_back() {
+    std::cout << "pop_back()" << std::endl;
     if(!isEmpty()) {
+        std::cout << "not empty " << std::endl;
         if (tail->prev != NULL) {
+            std::cout << " tail->prev not NULL" << std::endl;
             tail = tail->prev;
             tail->next = NULL;
         } else {
+            std::cout << " tail->prev is NULL" << std::endl;
             head = NULL;
             tail = NULL;
         }
         size--;
     } else {
+        std::cout << "is empty" << std::endl;
         std::cerr << std::endl << "Error: can't pop_back. The list is empty." << std::endl;
         exit(1);
     }
+    std::cout << "done pop_back()" << std::endl;
 }
 
+/* A function that remove first element from the list. */
 template <typename T>
 void MyList<T>::pop_front(){
+    std::cout << "pop_front()" << std::endl;
     if(!isEmpty()) {
+        std::cout << "not empty " << std::endl;
         if (head->next != NULL) {
+            std::cout << " head->next not NULL" << std::endl;
             head = head->next;
             head->prev = NULL;
         } else {
-            head = NULL;
+            std::cout << "head->next is NULL" << std::endl;
             tail = NULL;
+            head = NULL;
         }
         size--;
     } else {
+        std::cout << "is empty" << std::endl;
         std::cerr << std::endl << "Error: can't pop_back. The list is empty." << std::endl;
         exit(1);
     }
-
+    std::cout << "done pop_front()" << std::endl;
 }
 
+/*
+ * A function that return the first list element dara.
+ * @return T value - data from the first list element.
+ */
 template <typename T>
 T &MyList<T>::front() {
     if(isEmpty()) {
@@ -198,6 +255,10 @@ T &MyList<T>::front() {
     return head->data;
 }
 
+/*
+ * A function that return the last list element data.
+ * @return T value - data from the last list element.
+ */
 template <typename T>
 T &MyList<T>::back() {
     if(isEmpty()) {
@@ -207,12 +268,20 @@ T &MyList<T>::back() {
     return tail->data;
 }
 
-// я хз почему перегрузка не работает
-// код тела перегрузки просто НЕ выполняется и все
+/* A function that prints all list nodes data to the console. */
 template<typename T>
-MyList<T> &MyList<T>::operator=(const T &anotherList) {
-    std::cout << "hey" << std::endl;
-    return *this;
+void MyList<T>::printList() {
+    if (!isEmpty()) {
+        iterator itr = head;
+        iterator itr_end = tail->next;
+        std::cout << "[ | ";
+        for (int i = 0; itr != itr_end; itr++, i++) {
+            std::cout << i << "=" << *itr << " | ";
+        }
+        std::cout << "]" << std::endl;
+    } else {
+        std::cerr << std::endl << "Error: cant print list. The list is empty." << std::endl;
+    }
 }
 
 
