@@ -26,7 +26,7 @@ public:
     bool isEmpty();
     void clear();
     unsigned int getSize();
-    void push(const T &data, const int priority = 0);
+    void push(const T &data, const int priority = 1);
     void pop();
     T &top();
     int topPriority();
@@ -85,8 +85,8 @@ unsigned int MyPriorityQueue<T>::getSize() {
 
 template<typename T>
 void MyPriorityQueue<T>::push(const T &data, const int priority) {
-    //std::cout << "push:" << std::endl;
-    //std::cout << "     start" << std::endl;
+    std::cout << "push:" << std::endl;
+    std::cout << "     start" << std::endl;
     Node* n = new Node;
     n->data = data;
     n->priority = priority;
@@ -94,26 +94,26 @@ void MyPriorityQueue<T>::push(const T &data, const int priority) {
     n->below = NULL;
 
     if (head != NULL) {
-        //std::cout << "     head != NULL" << std::endl;
+        std::cout << "     head != NULL" << std::endl;
 
-        if (head->priority < priority) {
-            //std::cout << "     head priority < priority" << std::endl;
+        if (head->priority <= priority) {
+            std::cout << "     head priority <= priority" << std::endl;
             n->below = head;
             head->above = n;
             head = n;
         }
 
         if (head->priority > priority) {
-            //std::cout << "     head priority >= priority" << std::endl;
+            std::cout << "     head priority >= priority" << std::endl;
             Node *tmpNode = new Node;
             tmpNode = head;
             while (tmpNode->priority > priority) {
-                //std::cout << "     while cycle" << std::endl;
+                std::cout << "     while cycle" << std::endl;
                 if (tmpNode->below != NULL) {
                     tmpNode = tmpNode->below;
                     break;
                 } else {
-                    // here tmpNode is the last (lower) element
+                    //here tmpNode is the last (lower) element
                     tmpNode->below = n;
                     n->above = tmpNode;
                     break;
@@ -129,15 +129,15 @@ void MyPriorityQueue<T>::push(const T &data, const int priority) {
             tmpNode->above = n;
         }
     } else {
-        //::cout << "     head = NULL" << std::endl;
+        std::cout << "     head = NULL" << std::endl;
         // here head == NULL
         head = n;
         head->above = NULL;
         head->below = NULL;
     }
     size++;
-    //std::cout << "     size++" << std::endl;
-    //std::cout << "    DONE." << std::endl;
+    std::cout << "     size++" << std::endl;
+    std::cout << "     DONE." << std::endl;
 }
 
 template<typename T>

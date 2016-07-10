@@ -3,7 +3,6 @@
 #include "myStack.h"
 #include "myList.h"
 #include <vector>
-#include "myavltree.h"
 
 #define stackTest_simple 0
 #define stackTest_overloading 0
@@ -211,18 +210,32 @@ void testMyList() {
 
 void testMyQueue() {
     MyPriorityQueue<int> *myIntQueue = new MyPriorityQueue<int>();
-    myIntQueue->printQueue();
-    cout << "start FOR" << endl;
-    for (int i=0; i < 10; i++) {
-        myIntQueue->push(i);
-    }
-    cout << "size = " << myIntQueue->getSize() << endl;
+    cout << "printQueue() : " << endl;
     myIntQueue->printQueue();
 
-    cout << myIntQueue->top() << endl;
-    myIntQueue->pop();
-    cout << "size = " << myIntQueue->getSize() << endl;
-    cout << myIntQueue->top() << endl;
+    cout << "getSize() : " << endl;
+    myIntQueue->getSize();
+
+    cout << "push(1) : " << endl;
+    myIntQueue->push(1);
+
+    cout << "getSize() : " << endl;
+    myIntQueue->getSize();
+
+    cout << "top() : " << endl;
+    myIntQueue->top();
+
+
+    cout << "push(2) : " << endl;
+    myIntQueue->push(2);
+
+    cout << "getSize() : " << endl;
+    myIntQueue->getSize();
+
+    cout << "top() : " << endl;
+    myIntQueue->top();
+
+    cout << "end" << endl;
 
 }
 
