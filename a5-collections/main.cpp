@@ -214,10 +214,15 @@ void testMyQueue() {
     myIntQueue->printQueue();
     cout << "start FOR" << endl;
     for (int i=0; i < 10; i++) {
-        //cout << "      FOR " << i << endl;
         myIntQueue->push(i);
     }
+    cout << "size = " << myIntQueue->getSize() << endl;
     myIntQueue->printQueue();
+
+    cout << myIntQueue->top() << endl;
+    myIntQueue->pop();
+    cout << "size = " << myIntQueue->getSize() << endl;
+    cout << myIntQueue->top() << endl;
 
 }
 

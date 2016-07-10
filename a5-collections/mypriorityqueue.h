@@ -85,8 +85,8 @@ unsigned int MyPriorityQueue<T>::getSize() {
 
 template<typename T>
 void MyPriorityQueue<T>::push(const T &data, const int priority) {
-    std::cout << "push:" << std::endl;
-    std::cout << "     start" << std::endl;
+    //std::cout << "push:" << std::endl;
+    //std::cout << "     start" << std::endl;
     Node* n = new Node;
     n->data = data;
     n->priority = priority;
@@ -94,20 +94,21 @@ void MyPriorityQueue<T>::push(const T &data, const int priority) {
     n->below = NULL;
 
     if (head != NULL) {
-        std::cout << "     head != NULL" << std::endl;
+        //std::cout << "     head != NULL" << std::endl;
 
         if (head->priority < priority) {
-            std::cout << "     head priority < priority" << std::endl;
+            //std::cout << "     head priority < priority" << std::endl;
             n->below = head;
             head->above = n;
             head = n;
         }
 
         if (head->priority > priority) {
-            std::cout << "     head priority >= priority" << std::endl;
-            Node* tmpNode = head;
+            //std::cout << "     head priority >= priority" << std::endl;
+            Node *tmpNode = new Node;
+            tmpNode = head;
             while (tmpNode->priority > priority) {
-                std::cout << "     while cycle" << std::endl;
+                //std::cout << "     while cycle" << std::endl;
                 if (tmpNode->below != NULL) {
                     tmpNode = tmpNode->below;
                     break;
@@ -123,17 +124,20 @@ void MyPriorityQueue<T>::push(const T &data, const int priority) {
             n->above = tmpNode->above;
             n->below = tmpNode;
 
-            (n->above)->below = n;
-            (n->below)->above = n;
+            tmpNode->below = n;
+            tmpNode = n->below;
+            tmpNode->above = n;
         }
     } else {
-        std::cout << "     head = NULL" << std::endl;
+        //::cout << "     head = NULL" << std::endl;
         // here head == NULL
         head = n;
+        head->above = NULL;
+        head->below = NULL;
     }
     size++;
-    std::cout << "     size++" << std::endl;
-    std::cout << "    DONE." << std::endl;
+    //std::cout << "     size++" << std::endl;
+    //std::cout << "    DONE." << std::endl;
 }
 
 template<typename T>
@@ -159,7 +163,12 @@ void MyPriorityQueue<T>::pop() {
 
 template<typename T>
 T &MyPriorityQueue<T>::top() {
-    return head->data;
+    if (!isEmpty()) {
+        return head->data;
+    } else {
+        std::cerr << std::endl << "Error: can't return top element. The queue is empty." << std::endl;
+        exit(1);
+    }
 }
 
 template<typename T>
@@ -178,13 +187,11 @@ void MyPriorityQueue<T>::printQueue(){
         Node* tmpNode = head;
         if (tmpNode->below != NULL) {
             while (tmpNode->below != NULL) {
-                //std::cout << " "; printCurNode(tmpNode);
-                std::cout << "[" << tmpNode->data << ":" << tmpNode->priority << "]";
+                std::cout << " "; printCurNode(tmpNode);
             }
             std::cout << std::endl << "Total: " << size << " elements." << std::endl;
         } else {
-            //std::cout << "Only 1 element in queue: "; printCurNode(tmpNode); std::cout << std::endl;
-            std::cout << "[" << tmpNode->data << ":" << tmpNode->priority << "]" << std::endl;
+            std::cout << "Only 1 element in queue: "; printCurNode(tmpNode); std::cout << std::endl;
         }
     } else {
         std::cout << "Queue is empty." << std::endl;
