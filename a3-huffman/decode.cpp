@@ -1,13 +1,14 @@
-#include "config.h"
 #include "decode.h"
+#include "header.h"
 
 #include <fstream>
 
 using namespace std;
 
-void decode(Node* root) {
+void decode(Node* root, string outputFilename_str) {
     ///// ///// ///// decoding part ///// ///// /////
-    ifstream myInputFile(OUTPUT_FILE, ios::in | ios::binary);
+    const char* outputFilename = outputFilename_str.c_str();
+    ifstream myInputFile(outputFilename, ios::in | ios::binary);
     setlocale(LC_ALL,"Russian");
 
     Node *p = root;

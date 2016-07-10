@@ -1,5 +1,6 @@
+#include "header.h"
+
 #include "encode.h"
-#include "config.h"
 #include "node.h"
 
 #include <fstream>
@@ -79,9 +80,13 @@ string showVector(vector<char> vec) {
 }
 
 /* Function that prints input file content. */
-void showInputFileData() {
+void showInputFileData(const char filename[]) {
     if (DEBUG || SHOW_INPUT_FILE) {
-        ifstream tempInputFile(INPUT_FILE);
+        ifstream tempInputFile(filename);
+        if (!tempInputFile.is_open()) {
+            cerr << "Error while opening file." << endl;
+            exit(1);
+        }
         cout << "=== Start of input file: ===" << endl;
         while(!tempInputFile.eof()) {
             char buff[1];
@@ -91,15 +96,21 @@ void showInputFileData() {
         cout << endl << "===  End of input file.  ===" << endl;
         tempInputFile.close();
     }
+
 }
 
-Node* encode() {
+
+Node* encode(string inputFilename_str, string outputFilename_str) {
     ///// ///// ///// encoding part ///// ///// /////
-    showInputFileData();
-
+    const char* inputFilename = inputFilename_str.c_str();
+    const char* outputFilename = outputFilename_str.c_str();
+    showInputFileData(inputFilename);
     // Open input file and write the characters from a file into the map.
-    ifstream inputFile(INPUT_FILE, ios::in | ios::binary);
-
+    ifstream inputFile(inputFilename, ios::out | ios::binary);
+    if (!inputFile.is_open()) {
+        cerr << "Error while opening file" << endl;
+        exit(1);
+    }
     // Create map of all characters from input file.
     map<char, int> myMap;
     while(!inputFile.eof()) {
@@ -162,7 +173,7 @@ Node* encode() {
         cout << "Char codes string: " << final << endl;
     }
 
-    ofstream myOutputFile("output.txt");
+    ofstream myOutputFile(outputFilename);
     int counter = 0;
     char buff = 0;
 

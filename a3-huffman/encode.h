@@ -35,7 +35,7 @@ void createTable(Node* root);
 /* Function that prints input file content. */
 void showInputFileData();
 
-Node* encode();
+Node* encode(string inputFilename, string outputFilenamer);
 
 #endif // ENCODE
 

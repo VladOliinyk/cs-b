@@ -15,6 +15,5 @@ HEADERS += \
     encode.h \
     decode.h \
     node.h \
-    config.h \
     header.h
 
