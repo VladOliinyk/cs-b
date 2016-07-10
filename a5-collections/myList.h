@@ -5,11 +5,14 @@
 #ifndef MYLIST_H_INCLUDED
 #define MYLIST_H_INCLUDED
 
+
+
 template <class T>
 class MyList {
 
     ///// !!!!!!!!!!!!!!!!!private!!!!!!!!!!!!!!!!!! /////
-public:
+    /////        if NOT private #define SUDO         /////
+private:
     struct Node {
         T data;
         Node* next;
@@ -83,14 +86,16 @@ public:
         }
     };
 
-    MyList<T>& operator=(const T &other) {
-        // все равно это не работает.
-        std::cout << "hey" << std::endl;
-        return *this;
-    }
-
     void printList();
+    MyList<T>& operator=(T &other);
 };
+
+template <typename T>
+MyList<T>& MyList<T>::operator=(T &other) {
+    // все равно это не работает.
+    std::cout << "hey" << std::endl;
+    return *this;
+}
 
 /* Default constructor */
 template <typename T>
