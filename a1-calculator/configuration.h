@@ -1,6 +1,3 @@
-// configuration.h
-// Configuration file for debugging.
-
 #ifndef CONFIGURATION
 #define CONFIGURATION
 
@@ -15,7 +12,7 @@ using namespace std;
 #define DEBUG false
 
 /* The global switcher for output the info about usage. */
-#define USAGE 1
+#define USAGE false
 
 /* Show usage of program. */
 void showUsage();

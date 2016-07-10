@@ -12,6 +12,5 @@ SOURCES += main.cpp \
 
 HEADERS += \
     calculation.h \
-    prepear.h \
+    prepare.h \
     configuration.h \
-

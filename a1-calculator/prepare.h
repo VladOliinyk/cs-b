@@ -1,10 +1,22 @@
-// prepear.h
-// Header file for the functions of the equation string preparation.
-
 #ifndef PREPEAR
 #define PREPEAR
 
-#include "configuration.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+/* The global switcher for output the info about the process of solving. */
+#define DEBUG false
+
+/* The global switcher for output the info about usage. */
+#define USAGE false
+
+/* Show usage of program. */
+void showUsage();
+
 
 using namespace std;
 
@@ -32,4 +44,6 @@ string fixRepeteSigns(string str);
 /* Corrects the entry of negative numbers. */
 string fixNegativeVariables (string str);
 
+
+string getUserString();
 #endif // PREPEAR

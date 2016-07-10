@@ -1,17 +1,17 @@
-// main.cpp
-// Main frogram file.
-
-#include "prepear.h"
+#include "prepare.h"
 #include "calculation.h"
 
+
 /*
- * The main function.
+ * The real main function.
+ * Make all instead of us.
+ * Gets equation string, prepare it, and solve.
 *
  * @param argc - the int number of parameters passed to the main function.
  * @param argv - the array of pointers to parameters strings.
 */
-int main(int argc, char** argv)
-{
+void makeAll(int argc, char** argv) {
+    // configuration.h
     if (USAGE)
         showUsage();
 
@@ -21,26 +21,46 @@ int main(int argc, char** argv)
     if (argc > 1) {
         equation = argsToString(argc, argv);
     } else {
-        cout << "Enter the equation: ";
-        //cin.ignore(); // just for sync io streams
-        getline(cin, equation);
-
-        if (DEBUG)
-            cout << ": user equation [" << equation << "]" << endl;
-
-        if (!inputIsCorrect(equation)) {
-            cout << "Program closed." << endl;
-            return 1;
-        }
-
-        equation = fixEquation(equation);
-        if (DEBUG)
-            cout << ": fixed equation [" << equation << "]" << endl;
+        equation = getUserString();
     }
 
     cout << equation << " = " << calculate(equation) << endl;
     //system("pause");
+}
+
+/*
+ * The main function.
+*
+ * @param argc - the int number of parameters passed to the main function.
+ * @param argv - the array of pointers to parameters strings.
+*/
+int main(int argc, char** argv)
+{
+    makeAll(argc, argv);
     return 0;
+}
+
+/*
+ * The function which returns string entered by user.
+*
+ * @return equation - the equation string.
+*/
+string getUserString() {
+    string equation;
+    do {
+        cout << "Enter the equation: (to exit, enter 'q' as the first character)" << endl;
+        //cin.ignore(); // just for sync io streams
+        getline(cin, equation);
+        if (equation.at(0) == 'q') {
+            exit(1);
+        }
+
+        if (DEBUG)
+            cout << ": user equation [" << equation << "]" << endl;
+
+    } while (!inputIsCorrect(equation));
+
+    return equation;
 }
 
 /*

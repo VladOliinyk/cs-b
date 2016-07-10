@@ -1,5 +1,4 @@
-// calculation.cpp
-// Implementation file for calculation functions.
+#include "prepare.h"
 #include "calculation.h"
 
 using namespace std;
@@ -11,6 +10,11 @@ using namespace std;
  * @return result - result of equation.
 */
 string calculate(string equation) {
+
+    equation = fixEquation(equation);
+    if (DEBUG)
+        cout << ": fixed equation [" << equation << "]" << endl;
+
     if (DEBUG) {
         cout << ": START OF calculate METHOD" << endl;
         cout << ":  calculate func input [" << equation << "]" << endl;
