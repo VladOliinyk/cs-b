@@ -1,15 +1,26 @@
-#include <iostream>
-#include <string>
+//todo:
+// спросить про
+//              list2 = list1;
+//              (list2)->operator =(*list1);
+//                      *ну и про вектор аналогично
+
+
 #include "myStack.h"
 #include "myList.h"
-#include <vector>
+#include "mypriorityqueue.h"
+
+#include <iostream>
+#include <cstdlib>
 
 #define stackTest_simple 0
 #define stackTest_overloading 0
 
-#define listTest_simple false
-#define listTest_overloading false
+#define listTest_simple 0
+#define listTest_overloading 0
 
+#define queueTest_linear_priority 0
+#define queueTest_random_priority 0
+#define queueTest_pop_and_print 0
 
 using namespace std;
 
@@ -69,11 +80,13 @@ void testMyStack() {
              << "myStack  " << myStack << "   size=" << myStack->getSize() << endl
              << "myStack2 " << myStack2 << "   size=" << myStack2->getSize() << endl;
 
+        cout << endl;
         MyStack<int>* myStack3 = new MyStack<int>();
+        myStack3->operator =(*myStack2);
         cout << "before 'myStack3 = myStack2': " << endl
              << "myStack2 " << myStack2 << "   size=" << myStack2->getSize() << endl
              << "myStack3 " << myStack3 << "   size=" << myStack3->getSize() << endl;
-        myStack3 = myStack2;
+        cout << endl << "push 5 elem to myStack2" << endl;
         myStack2->push(1231);
         myStack2->push(1231);
         myStack2->push(1231);
@@ -90,19 +103,23 @@ void testMyStack() {
 
 // !!! need to non privat variables !!! //
 void printPrivatListInfo(MyList<int>* list) {
-    cout << "list->head " << list->head << endl;
-    cout << "list->tail " << list->tail << endl;
+#ifdef SUDO
+        cout << "list->head " << list->head << endl;
+        cout << "list->tail " << list->tail << endl;
+#endif
     cout << "list->size " << list->getSize() << endl;
-    if (list->head != NULL && list -> tail != NULL) {
-        cout << "list->head->data " << list->head->data << endl;
-        cout << "list->head->next " << list->head->next << endl;
-        cout << "list->head->prev " << list->head->prev << endl;
-        cout << "list->tail->data " << list->tail->data << endl;
-        cout << "list->tail->next " << list->tail->next << endl;
-        cout << "list->tail->prev " << list->tail->prev << endl;
-    } else {
-        cout << "WARN: can't print list node data. List is empty." << endl;
-    }
+#ifdef SUDO
+        if (list->head != NULL && list -> tail != NULL) {
+            cout << "list->head->data " << list->head->data << endl;
+            cout << "list->head->next " << list->head->next << endl;
+            cout << "list->head->prev " << list->head->prev << endl;
+            cout << "list->tail->data " << list->tail->data << endl;
+            cout << "list->tail->next " << list->tail->next << endl;
+            cout << "list->tail->prev " << list->tail->prev << endl;
+        } else {
+            cout << "WARN: can't print list node data. List is empty." << endl;
+        }
+#endif
 }
 
 
@@ -121,7 +138,7 @@ void testMyList() {
             printPrivatListInfo(listS);
         }
 
-        for (int i=0; i < 6; i++) {
+        for (int i=0; i < 5; i++) {
             cout << endl;
             cout << "pop_front #" << i << " ... ";
             listS->pop_front();
@@ -140,7 +157,7 @@ void testMyList() {
         list1->printList();
         cout << "----- ----- ---------- ----- -----" << endl;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 8; i++) {
             list1->push_back(i+10);
         }
 
@@ -170,9 +187,17 @@ void testMyList() {
         list2->printList();
         cout << "----- ----- ----- --- --- ----- ----- -----" << endl;
 
-        list2->operator =(*list1);
-        list2 = list1;
-        list1->head->data=88;
+        //list2 = list1;
+        (list2)->operator =(*list1);
+        list1->push_front(1);
+
+        cout << "----- LIST 1&2  AFTER list2 = list1 : -----" << endl;
+        list1->printList();
+        list2->printList();
+        cout << "----- ----- ----- --- --- ----- ----- -----" << endl;
+
+        list1->pop_front();
+        list1->push_back(1);
 
         cout << "----- LIST 1&2  AFTER list2 = list1 : -----" << endl;
         list1->printList();
@@ -205,38 +230,79 @@ void testMyList() {
     ///// direction test ///// end /////
 }
 
-#include <queue>
-#include "mypriorityqueue.h"
-
 void testMyQueue() {
-    MyPriorityQueue<int> *myIntQueue = new MyPriorityQueue<int>();
-    cout << "printQueue() : " << endl;
-    myIntQueue->printQueue();
+    ///// linear priority push test ///// start /////
+    if (queueTest_linear_priority) {
+        MyPriorityQueue<int> *myIntQueue2 = new MyPriorityQueue<int>();
+        cout << "start FOR" << endl;
+        for (int i=1; i < 11; i++) {
+            cout << "size = " << myIntQueue2->getSize() << endl;
+            cout << "push(" << i << ", " << 20-i << ")" << endl;
+            myIntQueue2->push(i, 20-i);
+        }
+        cout << "size = " << myIntQueue2->getSize() << endl;
+        myIntQueue2->printQueue();
+        cout << "pop" << endl;
+        myIntQueue2->pop();
+        myIntQueue2->printQueue();
+    }
+    ///// linear priority push test ///// end /////
 
-    cout << "getSize() : " << endl;
-    myIntQueue->getSize();
 
-    cout << "push(1) : " << endl;
-    myIntQueue->push(1);
+    ///// random priority push test ///// start /////
+    if (queueTest_random_priority) {
+        MyPriorityQueue<string> *myStringQueue = new MyPriorityQueue<string>();
+        cout << "string queue FOR:" << endl;
+        string str[5] = {"hello", "my", "awesome", "friend", "!"};
+        for (int i=0; i < 5; i++) {
+            myStringQueue->printQueue();
+            string tmpStr = str[i];
+            int tmpPr = rand() % 100+1;
+            cout << endl << "now push(" << tmpStr << ", " << tmpPr << ");" << endl;
+            myStringQueue->push(tmpStr, tmpPr);
+        }
 
-    cout << "getSize() : " << endl;
-    myIntQueue->getSize();
+        myStringQueue->printQueue();
+        cout << endl;
+        cout << endl << "now push(MAYTHE4thBWITHU, 60)" << endl;
+        myStringQueue->push("MAYTHE4thBWITHU", 60);
+        myStringQueue->printQueue();
+    }
+    ///// random priority push test ///// end /////
 
-    cout << "top() : " << endl;
-    myIntQueue->top();
 
+    ///// pop and print test ///// start /////
+    if (queueTest_pop_and_print) {
+        MyPriorityQueue<char> *myCharQueue = new MyPriorityQueue<char>();
+        myCharQueue->push('a');
+        myCharQueue->push('b');
+        myCharQueue->push('c');
+        myCharQueue->push('d');
 
-    cout << "push(2) : " << endl;
-    myIntQueue->push(2);
+        cout << "size = " << myCharQueue->getSize() << endl;
+        cout << myCharQueue->top() << endl;
+        myCharQueue->printQueue();
 
-    cout << "getSize() : " << endl;
-    myIntQueue->getSize();
+        myCharQueue->pop();
+        cout << "size = " << myCharQueue->getSize() << endl;
+        cout << myCharQueue->top() << endl;
+        myCharQueue->printQueue();
 
-    cout << "top() : " << endl;
-    myIntQueue->top();
+        myCharQueue->pop();
+        cout << "size = " << myCharQueue->getSize() << endl;
+        cout << myCharQueue->top() << endl;
+        myCharQueue->printQueue();
 
-    cout << "end" << endl;
+        myCharQueue->pop();
+        cout << "size = " << myCharQueue->getSize() << endl;
+        cout << myCharQueue->top() << endl;
+        myCharQueue->printQueue();
 
+        myCharQueue->pop();
+        cout << "size = " << myCharQueue->getSize() << endl;
+        myCharQueue->printQueue();
+    }
+    ///// pop and print test ///// end /////
 }
 
 /* Main function */
@@ -245,7 +311,7 @@ int main()
     testMyStack();
     testMyList();
     testMyQueue();
-
+    cout << "All right :)" << endl;
     return 0;
 }
 
