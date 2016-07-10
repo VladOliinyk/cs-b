@@ -13,8 +13,8 @@ private:
     int size;
     static const int defaultSize = 5;
     static const double resizeMultiplier = 1.6;
-    const double fillingLimitedCoef = 0.7;
-    const double decreaseFillingLimitedCoef = 0.3;
+    static const double fillingLimitedCoef = 0.7;
+    static const double decreaseFillingLimitedCoef = 0.3;
     void resize(double resizeCoef = resizeMultiplier);
 
 public:

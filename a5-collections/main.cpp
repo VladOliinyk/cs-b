@@ -212,6 +212,13 @@ void testMyList() {
 void testMyQueue() {
     MyPriorityQueue<int> *myIntQueue = new MyPriorityQueue<int>();
     myIntQueue->printQueue();
+    cout << "start FOR" << endl;
+    for (int i=0; i < 10; i++) {
+        //cout << "      FOR " << i << endl;
+        myIntQueue->push(i);
+    }
+    myIntQueue->printQueue();
+
 }
 
 /* Main function */
