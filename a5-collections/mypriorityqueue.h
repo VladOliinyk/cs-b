@@ -1,3 +1,7 @@
+//todo:
+// спросить про варианты printQueue()
+
+
 #ifndef MYPRIORITYQUEUE
 #define MYPRIORITYQUEUE
 
@@ -9,14 +13,18 @@ class MyPriorityQueue {
 private:
     struct Node {
         T data;
-        int priority;
-        Node* above; // higher priority
-        Node* below; //  lower priority
+        int priority = 0;
+        Node* above = NULL; // higher priority
+        Node* below = NULL; //  lower priority
+        int getPriority() {
+            return priority;
+        }
     };
-    unsigned int size;
+
+    int size = 0;
     Node* head;
 
-    void printCurNode(const Node* node);
+    void printNode(const Node* node);
 
 public:
     MyPriorityQueue();
@@ -25,8 +33,8 @@ public:
 
     bool isEmpty();
     void clear();
-    unsigned int getSize();
-    void push(const T &data, const int priority = 1);
+    int getSize();
+    void push(const T &data, int priority = 1);
     void pop();
     T &top();
     int topPriority();
@@ -35,6 +43,7 @@ public:
 
 
 };
+
 
 template<typename T>
 MyPriorityQueue<T>::MyPriorityQueue() {
@@ -52,7 +61,7 @@ MyPriorityQueue<T>::MyPriorityQueue(const MyPriorityQueue<T> &anotherQueue) {
     head = NULL;
     size = 0;
     if (!anotherQueue.isEmpty()) {
-        Node* tmpNode = anotherQueue.top;
+        Node* tmpNode = anotherQueue;
         while (tmpNode->below != NULL) {
             push(tmpNode, tmpNode->priority);
             tmpNode = tmpNode->below;
@@ -78,66 +87,101 @@ void MyPriorityQueue<T>::clear() {
 }
 
 template<typename T>
-unsigned int MyPriorityQueue<T>::getSize() {
+int MyPriorityQueue<T>::getSize() {
     return size;
 }
 
+bool comparePriority(int a, int b) {
+    return a <= b;
+}
 
 template<typename T>
-void MyPriorityQueue<T>::push(const T &data, const int priority) {
-    std::cout << "push:" << std::endl;
-    std::cout << "     start" << std::endl;
-    Node* n = new Node;
+void MyPriorityQueue<T>::push(const T &data, int newPriority) {
+    std::cout << " 0:" << std::endl;
+    Node *n = new Node;
     n->data = data;
-    n->priority = priority;
-    n->above = NULL;
-    n->below = NULL;
+    n->priority = newPriority;
 
-    if (head != NULL) {
-        std::cout << "     head != NULL" << std::endl;
-
-        if (head->priority <= priority) {
-            std::cout << "     head priority <= priority" << std::endl;
-            n->below = head;
-            head->above = n;
-            head = n;
-        }
-
-        if (head->priority > priority) {
-            std::cout << "     head priority >= priority" << std::endl;
-            Node *tmpNode = new Node;
-            tmpNode = head;
-            while (tmpNode->priority > priority) {
-                std::cout << "     while cycle" << std::endl;
-                if (tmpNode->below != NULL) {
-                    tmpNode = tmpNode->below;
-                    break;
-                } else {
-                    //here tmpNode is the last (lower) element
-                    tmpNode->below = n;
-                    n->above = tmpNode;
-                    break;
-                }
-            }
-            // after while tmpNode is the node
-            //   which priority less then new element priority
-            n->above = tmpNode->above;
-            n->below = tmpNode;
-
-            tmpNode->below = n;
-            tmpNode = n->below;
-            tmpNode->above = n;
-        }
-    } else {
-        std::cout << "     head = NULL" << std::endl;
-        // here head == NULL
+    if (size == 0) {
+        //if you are here - queue is empty
+        std::cout << " 0:0:" << std::endl;
+        n->above = NULL;
+        n->below = NULL;
         head = n;
-        head->above = NULL;
-        head->below = NULL;
+    } else {
+        std::cout << " 0:1:" << std::endl;
+        //if you are here - queue is NOT empty
+        Node* tmpNode = new Node;
+        tmpNode = head;
+        //int a = tmpNode->priority;
+        int a = tmpNode->getPriority();
+        if ( a <= newPriority) {
+            std::cout << " 0:1:0:" << std::endl;
+            //if you are here - top element's priority LESS than newPriority
+            //need to add BEFORE top element
+            tmpNode->above = n;
+            n->below = tmpNode;
+            head = n;
+        } else {
+            std::cout << " 0:1:1:" << std::endl;
+            //if you are here - top element's priority MORE than newPriority
+            if (size == 1) {
+                std::cout << "0:1:1:0:" << std::endl;
+                n->above = tmpNode;
+                tmpNode->below = n;
+            } else {
+                std::cout << " 0:1:1:1:" << std::endl;
+                if (tmpNode->priority > newPriority) {
+                    std::cout << " 0:1:1:1:0:" << std::endl;
+                    // here tmpNode.priority still MORE than newPriority
+                    while (tmpNode->priority > newPriority) {
+                        std::cout << "         -0:" << std::endl;
+                        if (tmpNode->below != NULL) {
+                            // tmpNode->below exist
+                            std::cout << "         -0:0:" << std::endl;
+                            tmpNode = tmpNode->below;
+                            continue;
+                        } else {
+                            std::cout << "         -0:1:" << std::endl;
+
+                            // tmpNode->below does not exist
+
+                            //here tmpNode is the last element in queue
+                            //  but tmpNode.priority still MORE than newPriority
+                            //need to add AFTER tmpNode element
+                            std::cout << "              &tmpNode        : " << &tmpNode << std::endl <<
+                                         "              &tmpNode->below : " << &tmpNode->below << std::endl <<
+                                         "              &n              : " << &n << std::endl <<
+                                         "              &n->above       : " << &n->above << std::endl;
+                            tmpNode->below = n;
+                            n->above = tmpNode;
+                            std::cout << std::endl;
+                            std::cout << "              &tmpNode        : " << &tmpNode << std::endl <<
+                                         "              &tmpNode->below : " << &tmpNode->below << std::endl <<
+                                         "              &n              : " << &n << std::endl <<
+                                         "              &n->above       : " << &n->above << std::endl;
+                            break;
+                        }
+                    }
+                } else {
+                    std::cout << " 0:1:1:1:1:" << std::endl;
+                    // here tmpNode.priority still LESS than newPriority
+                    std::cout << "         -0:2:" << std::endl;
+                    //here (I hope) tmpNode is the first element
+                    //  which tmpNode.priority <= newPriority
+                    //need to add BEFORE tmpNode element
+                    n->above = tmpNode->above;
+                    n->below = tmpNode;
+                    (tmpNode->above)->below = n;
+                    tmpNode->above = n;
+                }
+                std::cout << "         -" << std::endl;
+            }
+        }
+        //end of 'queue is NOT empty'
     }
+    std::cout << " -" << std::endl;
     size++;
-    std::cout << "     size++" << std::endl;
-    std::cout << "     DONE." << std::endl;
 }
 
 template<typename T>
@@ -176,8 +220,9 @@ int MyPriorityQueue<T>::topPriority() {
     return head->priority;
 }
 
+
 template<typename T>
-void MyPriorityQueue<T>::printCurNode(const Node* node) {
+void MyPriorityQueue<T>::printNode(const Node* node) {
     std::cout << "[" << node->data << ":" << node->priority << "]";
 }
 
@@ -185,13 +230,36 @@ template<typename T>
 void MyPriorityQueue<T>::printQueue(){
     if (!isEmpty()) {
         Node* tmpNode = head;
-        if (tmpNode->below != NULL) {
-            while (tmpNode->below != NULL) {
-                std::cout << " "; printCurNode(tmpNode);
-            }
-            std::cout << std::endl << "Total: " << size << " elements." << std::endl;
+        if (tmpNode->below == NULL) {
+            std::cout << "Here is only 1 element: ";
+            printNode(tmpNode);
+            std::cout << std::endl;
         } else {
-            std::cout << "Only 1 element in queue: "; printCurNode(tmpNode); std::cout << std::endl;
+            /* var1 */
+            //do {
+            //    printNode(tmpNode);
+            //    tmpNode = tmpNode->below;
+            //} while (tmpNode->below != NULL);
+            //printNode(tmpNode);
+
+            /* var2 */
+            //for (int i=0; i < size; i++) {
+            //    printNode(tmpNode);
+            //    tmpNode = tmpNode->below;
+            //}
+
+            /* var3 */
+            while (true) {
+                if (tmpNode->below != NULL) {
+                    printNode(tmpNode);
+                    tmpNode = tmpNode->below;
+                } else {
+                     printNode(tmpNode);
+                     break;
+                }
+            }
+            std::cout << std::endl << "Total " << size << " elements." << std::endl;
+
         }
     } else {
         std::cout << "Queue is empty." << std::endl;
