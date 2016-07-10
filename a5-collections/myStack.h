@@ -4,6 +4,8 @@
 #ifndef MYSTACK_H_INCLUDED
 #define MYSTACK_H_INCLUDED
 
+#include <iostream>
+
 template <class T>
 class MyStack {
 
@@ -29,7 +31,7 @@ public:
     int getFilled();
     bool isEmpty();
 
-    MyStack<T>& operator=(const MyStack<T> &anotherStack);
+    MyStack<T>& operator=( MyStack<T> &anotherStack);
 };
 
 /* Default constructor */
@@ -134,7 +136,7 @@ T& MyStack<T>::top() {
 
 
 template <typename T>
-MyStack<T> &MyStack<T>::operator=(const MyStack<T> &anotherStack) {
+MyStack<T> &MyStack<T>::operator=( MyStack<T> &anotherStack) {
     std::cout << "hey operator= for MyStack" << std::endl;
     if (&array != &anotherStack.array) {
         delete[] array;
