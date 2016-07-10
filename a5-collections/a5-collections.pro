@@ -8,5 +8,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    myStack.cpp
+
+HEADERS += \
+    myList.h \
+    myStack.h \
+    mypriorityqueue.h
 
