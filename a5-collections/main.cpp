@@ -3,9 +3,10 @@
 #include "myStack.h"
 #include "myList.h"
 #include <vector>
+#include "myavltree.h"
 
-#define stackTest_simple false
-#define stackTest_overloading false
+#define stackTest_simple 0
+#define stackTest_overloading 0
 
 #define listTest_simple false
 #define listTest_overloading false
@@ -205,11 +206,21 @@ void testMyList() {
     ///// direction test ///// end /////
 }
 
+#include <queue>
+#include "mypriorityqueue.h"
+
+void testMyQueue() {
+    MyPriorityQueue<int> *myIntQueue = new MyPriorityQueue<int>();
+    myIntQueue->printQueue();
+}
+
 /* Main function */
 int main()
 {
     testMyStack();
     testMyList();
+    testMyQueue();
+
     return 0;
 }
 
