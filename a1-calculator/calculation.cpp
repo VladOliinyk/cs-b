@@ -345,8 +345,8 @@ int getPriority(string str) {
 vector<string> solveOneStep(vector<string> equationVector) {
     string currentStr = "";
     vector<string> tempVector;
-    double tempRezult;
-    string tempStrRezult;
+    double tempResult;
+    string tempStrResult;
     int i;
     if (DEBUG)
         cout << ":     solve one step: " << endl;
@@ -376,16 +376,16 @@ vector<string> solveOneStep(vector<string> equationVector) {
 
             switch (curentOperator) {
             case '+':
-                tempRezult = operand1 + operand2;
+                tempResult = operand1 + operand2;
                 break;
             case '-':
-                tempRezult = operand1 - operand2;
+                tempResult = operand1 - operand2;
                 break;
             case '*':
-                tempRezult = operand1 * operand2;
+                tempResult = operand1 * operand2;
                 break;
             case '/':
-                tempRezult = operand1 / operand2;
+                tempResult = operand1 / operand2;
                 break;
             default:
                 break;
@@ -398,14 +398,14 @@ vector<string> solveOneStep(vector<string> equationVector) {
         tempVector.push_back(equationVector.at(j));
     }
     stringstream d2s;
-    d2s << tempRezult;
-    d2s >> tempStrRezult;
-    tempVector.push_back(tempStrRezult);
+    d2s << tempResult;
+    d2s >> tempStrResult;
+    tempVector.push_back(tempStrResult);
     for (int j=i+1; j < equationVector.size(); j++) {
         tempVector.push_back(equationVector.at(j));
     }
     if (DEBUG) {
-        cout << ":        rezult vector: ";
+        cout << ":        result vector: ";
         for (int i=0; i < tempVector.size(); i++) {
             cout << "[" << tempVector.at(i) << "] ";
         }
@@ -414,3 +414,4 @@ vector<string> solveOneStep(vector<string> equationVector) {
 
     return tempVector;
 }
+

@@ -1,7 +1,6 @@
 #include "prepare.h"
 #include "calculation.h"
 
-
 /*
  * The real main function.
  * Make all instead of us.
@@ -11,7 +10,9 @@
  * @param argv - the array of pointers to parameters strings.
 */
 void makeAll(int argc, char** argv) {
-    // configuration.h
+    do {
+    // in configuration.h
+    // show input rules
     if (USAGE)
         showUsage();
 
@@ -25,6 +26,9 @@ void makeAll(int argc, char** argv) {
     }
 
     cout << equation << " = " << calculate(equation) << endl;
+    } while (repeat());
+    closeProgramManually();
+
     //system("pause");
 }
 
@@ -51,14 +55,13 @@ string getUserString() {
         cout << "Enter the equation: (to exit, enter 'q' as the first character)" << endl;
         //cin.ignore(); // just for sync io streams
         getline(cin, equation);
-        if (equation.at(0) == 'q') {
-            exit(1);
+        if (inputIsCorrect(equation)) {
+            if (DEBUG)
+                cout << ": user equation [" << equation << "]" << endl;
+            break;
         }
 
-        if (DEBUG)
-            cout << ": user equation [" << equation << "]" << endl;
-
-    } while (!inputIsCorrect(equation));
+    } while (true);
 
     return equation;
 }
@@ -192,6 +195,12 @@ bool inputIsCorrect(string str) {
         return false;
     }
 
+    if (str.size() == 1) {
+        if (str.at(0) == 'q') {
+            closeProgramManually();
+        }
+    }
+
     if (numberOfUnpairedParentheses(str) != 0) {
         cout << endl;
         cout << "WARNING: input incorrect." << endl;
@@ -264,4 +273,33 @@ string haveForbiddenCharacters(string str) {
     }
 
     return fc;
+}
+
+/*
+ * Function that asks user for one more solve equation cycle.
+ * @return bool answer.
+ */
+bool repeat() {
+    string answer;
+    do {
+        cout << "Solve one more equation? (enter 'y' to repeat; enter 'n' - to exit) : ";
+        //cin.ignore(); // just for sync io streams
+        getline(cin, answer);
+        if (answer.size() > 0) {
+            if (answer.at(0) == 'y') {
+                return 1;
+            }
+            if (answer.at(0) == 'n') {
+                return 0;
+            }
+        }
+
+    } while (true);
+
+}
+
+/* Function that close program with farewell message. */
+void closeProgramManually() {
+    cout << "Glad to see you again, brah!" << endl;
+    exit(0);
 }

@@ -1,5 +1,5 @@
-#ifndef PREPEAR
-#define PREPEAR
+#ifndef PREPARE
+#define PREPARE
 
 #include <iostream>
 #include <string>
@@ -44,6 +44,9 @@ string fixRepeteSigns(string str);
 /* Corrects the entry of negative numbers. */
 string fixNegativeVariables (string str);
 
-
 string getUserString();
-#endif // PREPEAR
+
+bool repeat();
+
+void closeProgramManually();
+#endif // PREPARE
